@@ -1,7 +1,7 @@
-import java.awt.image.*;
 import java.awt.*;
+import java.awt.image.*;
 import java.io.*;
-import java.nio.*;
+import java.nio.ByteBuffer;
 import javax.imageio.*;
 
 class DotImage implements TextureImage {

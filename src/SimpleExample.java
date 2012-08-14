@@ -21,21 +21,25 @@ public class SimpleExample extends SimpleExampleBase {
 		//drawable.getGL().getGL2();
 		gl.glViewport(0, 0, SCREENW, SCREENH);
 
-		// Clear color buffer with black
-		gl.glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
+		// Background color
+		gl.glClearColor(.8f, .8f, .8f, 1f);
 		gl.glClearDepth(1.0f);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1);
 
+		// VS setup
 		gl.glCreateShader(GL2GL3.GL_VERTEX_SHADER);
 		shader.init(gl);
 		int programName =shader.getID();
+
+		// set attributes of VS
 		gl.glBindAttribLocation(programName,Object3D.VERTEXPOSITION, "inposition");
 		gl.glBindAttribLocation(programName,Object3D.VERTEXCOLOR, "incolor");
 		gl.glBindAttribLocation(programName,Object3D.VERTEXNORMAL, "innormal");
 		gl.glBindAttribLocation(programName,Object3D.VERTEXTEXCOORD0,"intexcoord0");
 		shader.link(gl);
+
 		uniformMat = gl.glGetUniformLocation(programName, "mat");
 		uniformLight = gl.glGetUniformLocation(programName, "lightdir");
 		gl.glUseProgram(programName);
@@ -49,9 +53,9 @@ public class SimpleExample extends SimpleExampleBase {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		mats.glMatrixMode(GL2.GL_MODELVIEW);
 		mats.glLoadIdentity();
-		mats.glTranslatef(0f,0f,-2.0f);
-		t = t+0.1f;
-		mats.glRotatef(t,1f,0f,0f);
+		mats.glTranslatef(0f,0f,-2f);
+		t += 0.2f;
+		mats.glRotatef(t,0f,1f,0f);
 		mats.glMatrixMode(GL2.GL_PROJECTION);
 		mats.glLoadIdentity();
 		mats.glFrustumf(-1f,1f,-1f,1f,1f,100f);

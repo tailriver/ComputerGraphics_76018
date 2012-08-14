@@ -3,12 +3,36 @@ import com.jogamp.opengl.util.*;
 import java.nio.*;
 
 public class Plane extends Object3D {
+	private final float tetrahedron_L = 0.8f;
+
+	private final float v10 = 1f;
+	private final float va0 = (float) (1 / Math.sqrt(5));
+	private final float vb0 = (1 - va0) / 2;
+	private final float vc0 = (1 + va0) / 2;
+	private final float vd0 = (float) Math.sqrt(vb0);
+	private final float ve0 = (float) Math.sqrt(vc0);
+	private final float tetrahedron_ratio = tetrahedron_L / ( 2 * vd0 );
+	private final float v1 = tetrahedron_ratio * v10;
+	private final float va = tetrahedron_ratio * va0;
+	private final float vb = tetrahedron_ratio * vb0;
+	private final float vc = tetrahedron_ratio * vc0;
+	private final float vd = tetrahedron_ratio * vd0;
+	private final float ve = tetrahedron_ratio * ve0;
+
 	private final float[] VertexData = new float[]{
-			-1.0f, -1.0f, 0f,	0.0f, 0.0f,-1.0f,	1f,0f,0f,1f,	0f,0f, //#0
-			1.0f, -1.0f, 0f,	0.0f, 0.0f,-1.0f,	1f,1f,0f,1f,	1f,0f, //#1
-			1.0f,  1.0f, 0f,	0.0f, 0.0f,-1.0f,	0f,1f,0f,1f,	1f,1f, //#2
-			-1.0f,  1.0f, 0f,	0.0f, 0.0f,-1.0f,	0f,0f,1f,1f,	0f,1f, //#3
-	};		//position			normal				color			texcoord
+			 0f,    0f,  v1,	 0f,    0f,  v1,	1f,0f,0f,1f,	0f,0f,
+			 0f,  2*va,  va,	 0f,  2*va,  va,	1f,0f,0f,1f,	1f,1f,
+			-ve,    vb,  va,	-ve,    vb,  va,	1f,0f,0f,1f,	0f,1f,
+			-vd,   -vc,  va,	-vd,   -vc,  va,	1f,0f,0f,1f,	1f,1f,
+			 vd,   -vc,  va,	 vd,   -vc,  va,	1f,0f,0f,1f,	1f,0f,
+			 ve,    vb,  va,	 ve,    vb,  va,	1f,0f,0f,1f,	0f,1f,
+			-vd,    vc, -va,	-vd,    vc, -va,	1f,0f,0f,1f,	0f,0f,
+			-ve,   -vb, -va,	-ve,   -vb, -va,	1f,0f,0f,1f,	1f,0f,
+			 0f, -2*va, -va,	 0f, -2*va, -va,	1f,0f,0f,1f,	0f,1f,
+			 ve,   -vb, -va,	 ve,   -vb, -va,	1f,0f,0f,1f,	0f,0f,
+			 vd,    vc, -va,	 vd,    vc, -va,	1f,0f,0f,1f,	1f,0f,
+			 0f,    0f, -v1,	 0f,    0f, -v1,	1f,0f,0f,1f,	1f,1f,
+	};	//	position			normal				color			texcoord
 	private final int NormalOffset = Float.SIZE/8*3;
 	private final int ColorOffset = Float.SIZE/8*6;
 	private final int TexCoordOffset = Float.SIZE/8*10;
@@ -17,8 +41,26 @@ public class Plane extends Object3D {
 	private final FloatBuffer FBVertexData = FloatBuffer.wrap(VertexData);
 
 	private final int[] ElementData = new int[]{
-			0,1,2, 
-			0,2,3 
+			0,1,2,
+			0,2,3,
+			0,3,4,
+			0,4,5,
+			0,5,1,
+			1,6,2,
+			2,7,3,
+			3,8,4,
+			4,9,5,
+			5,10,1,
+			1,10,6,
+			2,6,7,
+			3,7,8,
+			4,8,9,
+			5,9,10,
+			11,6,10,
+			11,7,6,
+			11,8,7,
+			11,9,8,
+			11,10,9,
 	};
 	private final int PolygonCount = ElementData.length/3;
 	private final int ElementCount = ElementData.length;
@@ -50,7 +92,7 @@ public class Plane extends Object3D {
 
 		// select image
 		//img = new ImageLoader("circles.png");
-		img = new DotImage(512, 512);
+		img = new DotImage(256, 256);
 
 		gl.glGenTextures(1, tmp, 0);
 		TextureName = tmp[0];
@@ -103,7 +145,7 @@ public class Plane extends Object3D {
 		gl.glUniform1i(uniformTexture, 0);
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, ArrayBufferName);
 		gl.glVertexAttribPointer(VERTEXPOSITION, 3, GL.GL_FLOAT, false, 48, 0);
-		gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 48, NormalOffset);
+		gl.glVertexAttribPointer(VERTEXNORMAL, 3, GL.GL_FLOAT, false, 48, NormalOffset);
 		gl.glVertexAttribPointer(VERTEXCOLOR, 4, GL.GL_FLOAT, false, 48, ColorOffset);
 		gl.glVertexAttribPointer(VERTEXTEXCOORD0, 2, GL.GL_FLOAT, false, 48, TexCoordOffset);
 		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, ElementBufferName);
