@@ -11,12 +11,12 @@ varying vec3 normal;
 varying vec4 color;
 varying vec2 texcoord;
 uniform mat4 mat[3];
-
-void main(void) {
-	normal = normalize((mat[2]*vec4(innormal,1.0)).xyz);
-	color = incolor;
-	texcoord = intexcoord0;
-	gl_Position = mat[0]*mat[1]*vec4(inposition, 1.0);
+ 
+void main(void)
+{
+  normal = normalize((mat[2]*vec4(innormal,1.0)).xyz);
+  color = incolor;
+  texcoord = intexcoord0;
+  gl_Position = mat[0]*mat[1]*vec4(inposition, 1.0);
 }
 
-// vim: syntax=glsl
